@@ -1,4 +1,4 @@
-import {useState} from 'react'
+import {useState,useEffect} from 'react'
 import {Button,Drawer,Form, Input,Upload } from 'antd'
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import type { UploadChangeParam } from 'antd/es/upload';
@@ -23,13 +23,24 @@ const beforeUpload = (file: RcFile) => {
   return isJpgOrPng && isLt2M;
 };
 export default function AddProCom(props) {
-    const {showAdd,closeAddPro}=props
+    const {showAdd,closeAddPro,refreshPage,recordData}=props
     const onClose = () => {
-      closeAddPro(false);
+      
+      
+      closeAddPro();
     };
     const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState();
   const [addForm] = Form.useForm();
+  useEffect(()=>{
+    if(recordData){
+      setImageUrl(recordData.img);
+      addForm.setFieldValue("name",recordData.name)
+      addForm.setFieldValue("img",recordData.img)
+      
+    }
+    
+  },[recordData])
   const handleChange: UploadProps['onChange'] = (info: UploadChangeParam<UploadFile>) => {
     if (info.file.status === 'uploading') {
       setLoading(true);
@@ -39,7 +50,7 @@ export default function AddProCom(props) {
       getBase64(info.file.originFileObj as RcFile, (url) => {
         setLoading(false);
         setImageUrl(url);
-        addForm.setFieldValue("imgUrl",url)
+        addForm.setFieldValue("img",url)
       });
   };
 
@@ -52,16 +63,19 @@ export default function AddProCom(props) {
   const onFinish=async (obj)=>{
     let sendObj={
       name:obj.name,
-      img:JSON.stringify(obj.imgUrl)
+      img:JSON.stringify(obj.img)
     }
-    let result = await http("post","/home/addpro",{...sendObj})
-    if(result.status=="200"){
-      console.log(1);
+    console.log(sendObj);
+    
+    // let result = await http("post","/home/addpro",{...sendObj})
+    // if(result.status=="200"){
+    //   closeAddPro(false)
+    //   refreshPage()
       
-    }
+    // }
     
   }
-  
+        if(!showAdd) return null
         return (
             <> 
               <Drawer
@@ -83,7 +97,7 @@ export default function AddProCom(props) {
                     />
                   </Form.Item>
                   <Form.Item
-                    name="imgUrl"
+                    name="img"
                     label="图片"
                     rules={[{ required: true, message: '请上传图片' }]}
                     valuePropName="file"

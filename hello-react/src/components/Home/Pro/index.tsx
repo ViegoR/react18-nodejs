@@ -16,7 +16,8 @@ export default function Pro() {
     img: string;
   }
   const [data, setData] = useState<DataType[]>([]);
-  const [showAdd, setShowAdd] = useState<boolean>(false);
+  const [showAdd, setShowAdd] = useState<number>(0);
+  const [recordData, setRecordData] = useState<object>();
 
   const handleGetProList:object=async ()=>{
     const sendObj= JSON.parse(localStorage.getItem("userTokenInfo"))
@@ -28,33 +29,47 @@ export default function Pro() {
     }
     setData(showList)
   }
+  const refreshPage=()=>{
+    handleGetProList()
+  }
   const addPro=()=>{
-    setShowAdd(true)
+    //setRecordData()
+    setShowAdd(1)
+  }
+  const changePro=(text,record)=>{
+    return()=>{
+      
+      setShowAdd(text)
+      setRecordData(record)
+    }
   }
   const closeAddPro=()=>{
-    setShowAdd(false)
+    setShowAdd(0)
+    setRecordData({})
+
   }
   return (
     <>
       <Button type='primary' onClick={addPro}>添加</Button>
       <Table dataSource={data}>
-        <Column title="序号" dataIndex="key" key="key" />
-        <Column title="品牌名称" dataIndex="name" key="name"  />
-        <Column title="品牌logo" dataIndex="img" key="img"
+        <Column title="序号" dataIndex="key" />
+        <Column title="品牌名称" dataIndex="name"  />
+        <Column title="品牌logo" dataIndex="img" 
           render={(img:string[])=>(
             <Image width={80} src={img} className="logoImg" alt='logo'/>
           )}
         />
-        <Column title="操作" dataIndex="img" key="img"
-          render={()=>(
+        <Column title="操作" dataIndex="key" 
+          render={(text,record)=>(
             <>
-              <Button type='default' >修改</Button>
+              <Button type='default' onClick={changePro(text,record)}>修改</Button>
               <Button type='primary'>删除</Button>
             </>
           )}
         />
       </Table>
-      <AddProCom showAdd={showAdd} closeAddPro={closeAddPro}></AddProCom>
+       <AddProCom showAdd={showAdd} recordData={recordData} closeAddPro={closeAddPro} refreshPage={refreshPage}></AddProCom>
+      
     </>
   )
 }
