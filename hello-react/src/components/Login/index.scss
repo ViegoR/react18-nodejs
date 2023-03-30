@@ -1,0 +1,19 @@
+.login{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    background: url("~@/assets/img/bg.jpg") no-repeat center 0px ;
+    background-size: 100% 100%;
+    .login-card{
+        width: 500px;
+        height: 200px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        h2{
+            text-align: center;
+        }
+    }
+}

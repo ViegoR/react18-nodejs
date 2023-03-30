@@ -1,0 +1,33 @@
+.home{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    .leftNav{
+        width: 15%;
+        height: 100%;
+        background-color: #001529;
+    }
+    .rightNav{
+        width: 85%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        .topNav{
+         line-height: 40px;
+           width:100% ;
+           height: 40px;
+        background-color: #666666;
+        position: relative;
+        button{
+            position: absolute;
+            right: 50px;
+        }
+        }
+        .mainRouter{
+            margin-top: 10px;
+            width: 100%;
+            flex: 1;
+        }
+    }
+
+}
